@@ -1,0 +1,235 @@
+<div class=" header pb-6">
+    <div class=" container-fluid">
+      <div class=" header-body">
+        <div class=" row align-items-center py-4">
+          <div class=" col-lg-6 col-7">
+            <h6 class=" h2 d-inline-block mb-0">Recepción por Integración</h6>
+  
+            <nav
+              aria-label="breadcrumb"
+              class=" d-none d-md-inline-block ml-md-4"
+            >
+              <ol class=" breadcrumb breadcrumb-links">
+                <li class=" breadcrumb-item">
+                  <a href="javascript:void(0)"> <i class=" fas fa-home"> </i> </a>
+                </li>
+  
+                <li class=" breadcrumb-item">
+                  <a href="javascript:void(0)"> Recepción </a>
+                </li>
+  
+                <li aria-current="page" class=" breadcrumb-item active">
+                    Recepción por Integración
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<div class=" container-fluid mt--6">
+    <div class=" row">
+      <div class=" col">
+        <div class=" card">
+          <div class=" card-header border-0">
+            <div class=" row">
+              <div class="col-md-4 form-group">
+                <input type="text"
+                 placeholder="Rango de fechas"
+                 class="form-control"
+                 bsDaterangepicker
+                 (bsValueChange)="changeDateRange($event)"
+                 [(ngModel)]="dateRange"
+                 [bsConfig]="{ isAnimated: true }">
+              </div>
+              <div class="col-md-6">
+                <input class="form-control" placeholder="Buscar..." [(ngModel)]="searchTable">
+              </div>
+              <div class=" col-md-2 text-right">
+                <button class="btn btn-primary btn-sm" (click)="generateReport('all')"> Generar reporte </button>
+              </div>
+            </div>
+            <!-- <div class="row">
+              <div *ngIf="showMultiActionsFlag" class="col-md-4 offset-md-8">
+                <ngx-select-dropdown 
+                  [(ngModel)]="multiActionsFlag" 
+                  [ngModelOptions]="{standalone: true}"
+                  [multiple]="false" 
+                  [config]="actionConfig" 
+                  [options]="actions"
+                  (change)="selectionChanged($event,'action',changeStatusModal,changeAccountingAccountModal)"
+                  ngDefaultControl 
+                  class="w-100 h-100"
+                  ></ngx-select-dropdown>
+              </div>
+            </div> -->
+          </div>
+  
+          <div class=" table-responsive">
+            <table class=" table align-items-center table-flush">
+              <thead class=" thead-light">
+                <tr>
+                  <ng-container *ngFor="let element of headerElements"> 
+                    <!-- || (element.show_flag && showMoreColumnsFlag) -->
+                    <th class=" sort" data-sort="project" scope="col" *ngIf="(!element.show_flag && element.name!='CODIGO_SAP' && element.name!='UNIDADES')">
+                      {{element.name}}                    
+                    </th>
+                  </ng-container>
+                </tr>
+                <tr class="header-search-tr">
+                  <ng-container *ngFor="let item of headerElements"> 
+                    <!-- || (item.show_flag && showMoreColumnsFlag) -->
+                  <th class="" scope="col" *ngIf="(!item.show_flag && item.name!='CODIGO_SAP' && item.name!='UNIDADES')">
+                    <div *ngIf="item.name=='SELECCIÓN'" class=" custom-control custom-checkbox" style="text-align: center;">
+                      <input
+                        class=" custom-control-input"
+                        id="table-check-all"
+                        type="checkbox"
+                        (change)="checkboxChanged($event,'all')"
+                      />
+      
+                      <label class=" custom-control-label" for="table-check-all">
+                      </label>
+                    </div>
+                    <input 
+                    *ngIf="item.name!='SELECCIÓN' && item.name!='ACCIONES' "
+                    (input)="onSearchChange($event,item.key,'table1')"
+                    type="text" 
+                    placeholder="{{item.name}}" 
+                    class="form-control header-search">
+                    <div *ngIf="item.name=='ACCIONES'" class="text-center">
+                      <i class="fa fa-bars"></i>
+                    </div>
+                  </th>
+                  </ng-container>
+                </tr>
+              </thead>
+  
+              <tbody class=" list">
+                  <tr 
+                    *ngFor="let reception of ( receptions | filterByColumn : firstElementFilter | genericFilter: searchTable ) ;index as i " 
+                     > 
+                      <th>
+                        <div class=" custom-control custom-checkbox" style="text-align: center;">
+                          <input
+                            class=" custom-control-input"
+                            id="table-check-{{i}}"
+                            type="checkbox"
+                            [checked]="reception.checked"
+                            (change)="checkboxChanged($event,reception)"
+                          />          
+                          <label class=" custom-control-label" for="table-check-{{i}}">
+                          </label>
+                        </div>
+                      </th>
+                      <td class="budget">{{reception.TIPO_RECEPCION}}</td>
+                      <td class="budget">{{reception['OC/FACT RESERVA']}}</td>
+                      <td class="budget">{{reception.NUMERO_GRP}}</td>
+                      <td class="budget">{{reception.FECHA_RECEPCION}}</td>
+                      <td class="budget">{{reception.DOCNUM}}</td>
+                      <td class="budget">{{reception.CONTRATO}}</td>
+                      <!--<td class="budget">{{reception.CODIGO_SAP}}</td>
+                      <td class="budget">{{reception.UNIDADES | number: '1.0-0'}}</td>-->
+                      <!-- <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.ID}}</td>
+                      <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.NUMERO_PEDIDO}}</td>
+                      <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.FECHA_RUTA}}</td>
+                      <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.CODIGO_GOLDEN}}</td>
+                      <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.CODIGO_SAP}}</td>
+                      <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.UNIDADES}}</td>
+                      <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.LOTE}}</td>
+                      <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.FECHA_VENCIMIENTO}}</td>
+                      <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.DOCUMENTO_RECEPCION}}</td>
+                      <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.OBSERVACIONES_NUTRA}}</td> -->
+                      
+                  </tr>
+              </tbody>
+            </table>
+            
+          </div>
+          <div class=" card-footer py-4">
+            <nav aria-label="...">
+              <pagination
+                [totalItems]="totalItems"
+                [maxSize]="5"
+                [rotate]="true"
+                (pageChanged)="pageChanged($event)"
+                class="justify-content-end mb-0"
+                previousText="<i class='fas fa-angle-left'></i>"
+                nextText="<i class='fas fa-angle-right'></i>"
+              >
+              </pagination>
+            </nav>
+          </div>
+        </div>
+        <div class="card" *ngIf="receptionsByReserva.length>0">
+          <div class="card-header border-0">
+            <div class="row align-items-center" style="margin-bottom: 10px;">
+              <div class="col"><h3 class=" mb-0">Lista de Recepciones por reserva</h3></div>
+              
+              <div class="col text-right">
+                <button class="btn btn-primary btn-sm" (click)="generateReport('by_reserva')"> 
+                  Generar reporte 
+                </button>
+                
+                <button class="btn btn-sm btn-danger" (click)="receptionsByReserva=[]">
+                  <i class=" fa fa-times"></i>
+                </button>
+              </div>
+            </div>            
+          </div>
+          <div class=" table-responsive">
+            <table class=" table align-items-center table-flush">
+              <thead class=" thead-light">
+                <tr>
+                  <ng-container *ngFor="let element of headerElements"> 
+                    <th class=" sort" data-sort="project" scope="col" *ngIf="(element.name!='SELECCIÓN' && !element.show_flag || (element.show_flag && showMoreColumnsFlag))">
+                      {{element.name}}                    
+                    </th>
+                  </ng-container>                  
+                  <th>
+                    <button class="btn btn-primary" (click)="showMoreColumnsFlag=!showMoreColumnsFlag">
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </th>
+                </tr>
+                <tr class="header-search-tr">
+                  <ng-container *ngFor="let item of headerElements"> 
+                    <!-- || (item.show_flag && showMoreColumnsFlag) -->
+                  <th class="" scope="col" *ngIf="(item.name!='SELECCIÓN' && !item.show_flag || (item.show_flag && showMoreColumnsFlag))">
+                    
+                    <input 
+                    *ngIf="item.name!='SELECCIÓN' && item.name!='ACCIONES'"
+                    (input)="onSearchChange($event,item.key,'table2')"
+                    type="text" 
+                    placeholder="{{item.name}}" 
+                    class="form-control header-search">
+                    <div *ngIf="item.name=='ACCIONES'" class="text-center">
+                      <i class="fa fa-bars"></i>
+                    </div>
+                  </th>
+                  </ng-container>
+                  <th></th>
+                </tr>
+              </thead>
+  
+              <tbody class=" list">
+                  <tr *ngFor="let reception of ( receptionsByReserva | filterByColumn : secondElementFilter ) ;index as i " > 
+                    <!--  -->
+                    <td class="budget">{{reception.TIPO_RECEPCION}}</td>
+                    <td class="budget">{{reception['OC/FACT RESERVA']}}</td>
+                    <td class="budget">{{reception.NUMERO_GRP}}</td>
+                    <td class="budget">{{reception.FECHA_RECEPCION}}</td>
+                    <td class="budget">{{reception.DOCNUM}}</td>
+                    <td class="budget">{{reception.CONTRATO}}</td>
+                    <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.CODIGO_SAP}}</td>
+                    <td class="budget" *ngIf="showMoreColumnsFlag">{{reception.UNIDADES | number: '1.0-0'}}</td>
+                      <td class=" budget"></td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>          
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,182 @@
+<ng-template #form let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Registrar usuario</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #elementForm="ngForm" class="new-event--form">
+      <div class="form-group">
+        <label class="form-control-label">Nombre</label>
+        <input
+          placeholder="Nombre"
+          class="form-control form-control-alternative new-event--title"
+          type="text"
+          [(ngModel)]="user.name" 
+          [ngModelOptions]="{standalone: true}"
+        />
+      </div>
+      <div class="form-group">
+        <label class="form-control-label">Email</label>
+        <input
+          placeholder="Email"
+          class="form-control form-control-alternative new-event--title"
+          type="text"
+          [(ngModel)]="user.email" 
+          [ngModelOptions]="{standalone: true}"
+        />
+      </div>
+      <div class="form-group">
+        <label class="form-control-label">Contraseña</label>
+        <input
+          placeholder="Contraseña"
+          class="form-control form-control-alternative new-event--title"
+          type="password"
+          [(ngModel)]="user.password" 
+          [ngModelOptions]="{standalone: true}"
+        />
+      </div>
+      <div class="form-group">
+        <label class="form-control-label">Confirmar Contraseña</label>
+        <input
+        placeholder="Confirmar Contraseña"
+        class="form-control form-control-alternative new-event--title"
+        type="password"
+        [(ngModel)]="user.password_confirmation"
+        [ngModelOptions]="{standalone: true}"
+        />
+      </div>
+      <div class="form-group">
+        <label class="form-control-label">Seleccione el rol</label>
+        <ngx-select-dropdown 
+          [(ngModel)]="user.rol" 
+          [ngModelOptions]="{standalone: true}"
+          [multiple]="false" 
+          [config]="{
+            displayKey: 'name',
+            placeholder: 'Roles',
+            search:true,
+            searchPlaceholder:'Buscar'
+          }" 
+          [options]="rols"
+          ngDefaultControl 
+          ></ngx-select-dropdown>
+          <!-- class="w-100 h-100" -->
+        </div> 
+    </form>
+  </div>
+  <div class=" modal-footer">
+    <div class="mr-auto">
+      <button
+        (click)="closeModal()"
+        class=" btn btn-link "
+        data-dismiss="modal"
+        type="button"
+        >
+        Cerrar
+      </button>
+    </div>
+    <div class="ml-auto">
+      <button
+        class=" btn btn-primary new-event--add"
+        type="submit"
+        (click)="register()"
+        >
+        {{user.id?'Actualizar':'Registrar'}}
+      </button>   
+    </div>    
+  </div>
+</ng-template>
+<div class=" header pb-6">
+    <div class=" container-fluid">
+      <div class=" header-body">
+        <div class=" row align-items-center py-4">
+          <div class=" col-lg-6 col-7">
+            <h6 class=" h2 d-inline-block mb-0">Usuarios</h6>
+  
+            <nav
+              aria-label="breadcrumb"
+              class=" d-none d-md-inline-block ml-md-4"
+            >
+              <ol class=" breadcrumb breadcrumb-links">
+                <li class=" breadcrumb-item">
+                  <a href="javascript:void(0)"> <i class=" fas fa-home"> </i> </a>
+                </li>
+  
+                <li class=" breadcrumb-item">
+                  <a href="javascript:void(0)"> Seguridad </a>
+                </li>
+  
+                <li aria-current="page" class=" breadcrumb-item active">
+                    Usuarios
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<div class=" container-fluid mt--6">
+    <div class=" row">
+        <div class=" col">
+            <div class=" card">
+              <div class="card-header border-0">
+                <div class="row align-items-center" style="margin-bottom: 10px;">
+                  <div class="col"><h3 class=" mb-0">Lista de usuarios</h3></div>
+                    <div class="col text-right">
+                      <!-- *ngIf="getPermission('dashboards/product-prices-list','register',null,null)" class="btn btn-sm btn-primary" (click)="navigateTo(['dashboards/product-price-list-form'])" -->
+                      <button class="btn btn-sm btn-primary" (click)="open(form)">Crear nuevo</button>
+                    </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <input class="form-control" placeholder="Buscar Usuario..." [(ngModel)]="searchTable">
+                  </div>
+                </div>
+              </div>
+                <div class=" table-responsive">
+                    <table class=" table align-items-center table-flush">
+                        <thead class=" thead-light">
+                            <tr>
+                                <th class=" sort" data-sort="project" scope="col" *ngFor="let element of headerElements">
+                                {{element}}
+                                </th>
+                                
+                            <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class=" list">
+                            <!-- [class.row-selected]="user.selected" -->
+                            <tr *ngFor="let user of users | genericFilter: searchTable,index as i"  >
+                              <td class="budget">{{user.name}}</td>
+                              <td class="budget">{{user.email}}</td>
+                              <td class=" budget">
+                                  <a
+                                    class="table-action table-action-delete"
+                                    tooltip="Editar usuario"
+                                    placement="top"
+                                    href="javascript:void(0)"
+                                    (click)="edit(user,form)"
+                                    >
+                                    <i class=" fas fa-edit"> </i>
+                                  </a>
+                                  <a
+                                    class="table-action table-action-delete"
+                                    tooltip="Eliminar usuario"
+                                    placement="top"
+                                    href="javascript:void(0)"
+                                    (click)="delete(user.id)"
+                                    >
+                                    <i class=" fas fa-trash"> </i>
+                                  </a>
+                              </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

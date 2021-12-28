@@ -1,0 +1,155 @@
+<ng-template #form let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Registrar roles</h5>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #elementForm="ngForm" class="new-event--form">
+        <div class="form-group">
+          <label class="form-control-label">Nombre</label>
+          <input
+            placeholder="Nombre"
+            class="form-control form-control-alternative new-event--title"
+            type="text"
+            [(ngModel)]="rol.name" 
+            [ngModelOptions]="{standalone: true}"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-control-label">Descripción</label>
+          <input
+            placeholder="Descripción"
+            class="form-control form-control-alternative new-event--title"
+            type="text"
+            [(ngModel)]="rol.description" 
+            [ngModelOptions]="{standalone: true}"
+          />
+        </div> 
+        <div class="form-group">
+            <ngx-select-dropdown 
+              [(ngModel)]="rol.modules" 
+              [ngModelOptions]="{standalone: true}"
+              [multiple]="true" 
+              [config]="applicationModulesConfig" 
+              [options]="applicationModules"
+              ngDefaultControl 
+              class="w-100 h-100"
+              ></ngx-select-dropdown>
+        </div>       
+      </form>
+    </div>
+    <div class=" modal-footer">
+      <div class="mr-auto">
+        <button
+          (click)="closeModal()"
+          class=" btn btn-link "
+          data-dismiss="modal"
+          type="button"
+          >
+          Cerrar
+        </button>
+      </div>
+      <div class="ml-auto">
+        <button
+          class=" btn btn-primary new-event--add"
+          type="submit"
+          (click)="register()"
+          >
+          {{rol.id?'Actualizar':'Registrar'}}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  <div class=" header pb-6">
+      <div class=" container-fluid">
+        <div class=" header-body">
+          <div class=" row align-items-center py-4">
+            <div class=" col-lg-6 col-7">
+              <h6 class=" h2 d-inline-block mb-0">Roles</h6>
+    
+              <nav
+                aria-label="breadcrumb"
+                class=" d-none d-md-inline-block ml-md-4"
+              >
+                <ol class=" breadcrumb breadcrumb-links">
+                  <li class=" breadcrumb-item">
+                    <a href="javascript:void(0)"> <i class=" fas fa-home"> </i> </a>
+                  </li>
+    
+                  <li class=" breadcrumb-item">
+                    <a href="javascript:void(0)"> Seguridad </a>
+                  </li>
+    
+                  <li aria-current="page" class=" breadcrumb-item active">
+                      Roles
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class=" container-fluid mt--6">
+      <div class=" row">
+          <div class=" col">
+              <div class=" card">
+                <div class="card-header border-0">
+                  <div class="row align-items-center" style="margin-bottom: 10px;">
+                    <div class="col"><h3 class=" mb-0">Lista de roles</h3></div>
+                      <div class="col text-right">
+                        <!-- *ngIf="getPermission('dashboards/product-prices-list','register',null,null)" class="btn btn-sm btn-primary" (click)="navigateTo(['dashboards/product-price-list-form'])" -->
+                        <button class="btn btn-sm btn-primary" (click)="open(form)">Crear nuevo</button>
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <input class="form-control" placeholder="Buscar Rol..." [(ngModel)]="searchTable">
+                    </div>
+                  </div>
+                </div>
+                  <div class=" table-responsive">
+                      <table class=" table align-items-center table-flush">
+                          <thead class=" thead-light">
+                              <tr>
+                                  <th class=" sort" data-sort="project" scope="col" *ngFor="let element of headerElements">
+                                  {{element}}
+                                  </th>
+                                  
+                              <th scope="col">Acciones</th>
+                              </tr>
+                          </thead>
+                          <tbody class=" list">
+                              <tr *ngFor="let rol of roles | genericFilter: searchTable,index as i"  >
+                                <td class="budget">{{rol.name}}</td>
+                                <td class="budget">{{rol.description}}</td>
+                                <td class=" budget">
+                                    <a
+                                      class="table-action table-action-delete"
+                                      tooltip="Editar rol"
+                                      placement="top"
+                                      href="javascript:void(0)"
+                                      (click)="edit(rol,form)"
+                                      >
+                                      <i class=" fas fa-edit"> </i>
+                                    </a>
+                                    <a
+                                      class="table-action table-action-delete"
+                                      tooltip="Eliminar rol"
+                                      placement="top"
+                                      href="javascript:void(0)"
+                                      (click)="delete(rol.id)"
+                                      >
+                                      <i class=" fas fa-trash"> </i>
+                                    </a>
+                                </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>

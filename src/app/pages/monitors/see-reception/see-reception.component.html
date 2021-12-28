@@ -1,0 +1,135 @@
+<div class=" header pb-6">
+  <div class=" container-fluid">
+    <div class=" header-body">
+      <div class=" row align-items-center py-4">
+        <div class=" col-lg-6 col-7">
+          <h6 class=" h2 d-inline-block mb-0">Ver Recepción</h6>
+
+          <nav
+            aria-label="breadcrumb"
+            class=" d-none d-md-inline-block ml-md-4"
+          >
+            <ol class=" breadcrumb breadcrumb-links">
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> <i class=" fas fa-home"> </i> </a>
+              </li>
+
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> Monitores </a>
+              </li>
+
+              <li aria-current="page" class=" breadcrumb-item active">
+                Ver Recepción
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class=" container-fluid mt--6">
+  <div class=" row">
+    <div class=" col">
+      <div class=" card">
+        <div class=" card-header border-0">
+          <div class=" row">
+            <div class="col form-group">
+              <input type="text"
+               placeholder="Rango de fechas"
+               class="form-control"
+               bsDaterangepicker
+               [bsConfig]="{ isAnimated: true }">
+            </div>
+            
+            <div class="col">
+              <label class=" form-control-label">
+                Tipo
+              </label>
+              <div class=" custom-control custom-radio mb-3">
+                <input
+                class=" custom-control-input"
+                id="customRadio1"
+                name="custom-radio-1"
+                type="radio"
+                />
+
+                <label class=" custom-control-label" for="customRadio1">
+                  Manual
+                </label>
+              </div>
+
+              <div class=" custom-control custom-radio mb-3">
+                <input
+                checked=""
+                class=" custom-control-input"
+                id="customRadio2"
+                name="custom-radio-1"
+                type="radio"
+                />
+
+                <label class=" custom-control-label" for="customRadio2">
+                  Nacional
+                </label>
+              </div>
+
+              <div class=" custom-control custom-radio mb-3">
+                <input
+                checked=""
+                class=" custom-control-input"
+                id="customRadio3"
+                name="custom-radio-1"
+                type="radio"
+                />
+
+                <label class=" custom-control-label" for="customRadio3">
+                  Internacional
+                </label>
+              </div>
+            </div>         
+            <div class=" col text-right">
+              <a
+                class=" btn btn-sm btn-primary btn-round btn-icon"
+                href="javascript:void(0)"
+                tooltip="Buscar"
+                placement="top"
+                (click)="search()"
+              >
+                <span class=" btn-inner--icon">
+                  <i class=" fas fa-search"> </i>
+                </span>
+
+                <span class=" btn-inner--text" > Buscar </span>
+              </a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <input class="form-control" placeholder="Buscar..." [(ngModel)]="searchTable">
+            </div>
+          </div>
+        </div>
+        <div class=" table-responsive">
+          <table class=" table align-items-center table-flush">
+            <thead class=" thead-light">
+              <tr>
+                <th class=" sort" data-sort="id" scope="col" (click)="sortTableBy('id')">ID</th>
+                <th class=" sort" data-sort="type" scope="col" (click)="sortTableBy('type')">Tipo</th>
+                <th class=" sort" data-sort="doc" scope="col">Doc</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+
+            <tbody class=" list">
+              <tr *ngFor="let reception of receptions | genericFilter: searchTable ">
+                <th class="budget">{{reception.id}}</th>
+                <th class="budget">{{reception.type}}</th>
+                <th class="budget"><input type="text" name="" class="form-control"></th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

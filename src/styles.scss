@@ -1,0 +1,74 @@
+/* You can add global styles to this file, and also import other style files */
+body{	
+    background-color: #E7EAEB !important;
+}
+    @media (max-width: 600px) {
+	  	ngb-datepicker{
+		  	.ngb-dp-months{
+			  	display: block;
+			  }
+		}
+	}
+	.ngx-pagination{
+		width: max-content;
+	}
+	
+.custom-radio{
+	width: 50%;
+}
+.table thead th{
+	text-transform: capitalize !important;
+}
+.btn-primary, .ngx-pagination .current, .swal2-styled.swal2-confirm{
+    background-color: #3071A9 !important;
+    border-color: #3071A9 !important;
+}
+nav a{
+	color:#000;
+	&:hover{
+		color:#3071A9;
+	}
+}
+th a{
+	color:#3071A9;
+	&:hover{
+		color:#3071A9;
+	}
+}
+.theme-blue .bs-datepicker-head, 
+.theme-blue .bs-datepicker-body table td span.selected, .theme-blue .bs-datepicker-body table td.selected span, .theme-blue .bs-datepicker-body table td span[class*="select-"]:after, .theme-blue .bs-datepicker-body table td[class*="select-"] span:after {
+    background-color: #3071A9 !important;
+}
+.theme-blue .bs-datepicker-body table td.week span {
+    color: #3071A9 !important;
+}
+
+.ngx-dropdown-container {
+	.ngx-dropdown-list-container{
+		hr{
+			margin: 0px !important;
+		}
+		ul{
+		    margin: 5px !important;
+		}
+	}
+}
+.overlay-shown{
+    z-index: 3000 !important;
+}
+.table{
+	thead{
+		.header-search-tr{
+			th{
+				padding: 4px;
+				.header-search{
+					height:30px;
+					::placeholder{
+						font-size: 0.65rem;
+					}
+				}
+			}
+			
+		}
+	}
+}

@@ -1,0 +1,308 @@
+<ng-template #changeStatusModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Observacion Administrador</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <textarea 
+        class="form-control" 
+        placeholder="Observacion Administrador"
+        [(ngModel)]="changeStatusData.OBS_ADMINISTRADOR">
+      </textarea>
+    </div>
+  </div>
+  <div class=" modal-footer">
+    <div class="mr-auto">
+      <button
+        (click)="closeModal()"
+        class=" btn btn-link "
+        data-dismiss="modal"
+        type="button"
+        >
+        Cerrar
+      </button>
+    </div>
+    <div class="ml-auto">
+      <button
+        (click)="saveChangeStatus()"
+        class=" btn btn-primary "
+        data-dismiss="modal"
+        type="button"
+        >
+        Guardar
+      </button>
+    </div>
+</div>
+</ng-template>
+<ng-template #changeAccountingAccountModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Cuenta contable</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <input 
+        class="form-control" 
+        placeholder="Cuenta contable"
+        type="number"
+        [(ngModel)]="changeAccountingAccountData.CUENTA_CONTABLE" />
+    </div>
+  </div>
+  <div class=" modal-footer">
+    <div class="mr-auto">
+      <button
+        (click)="closeModal()"
+        class=" btn btn-link "
+        data-dismiss="modal"
+        type="button"
+        >
+        Cerrar
+      </button>
+    </div>
+      
+    <div class="ml-auto">
+      <button
+        (click)="saveChangeAccountingAccount()"
+        class=" btn btn-primary"
+        data-dismiss="modal"
+        type="button"
+        >
+        Guardar
+      </button>
+    </div>
+</div>
+</ng-template>
+<div class=" header pb-6">
+  <div class=" container-fluid">
+    <div class=" header-body">
+      <div class=" row align-items-center py-4">
+        <div class=" col-lg-6 col-7">
+          <h6 class=" h2 d-inline-block mb-0">Ajustes</h6>
+
+          <nav
+            aria-label="breadcrumb"
+            class=" d-none d-md-inline-block ml-md-4"
+          >
+            <ol class=" breadcrumb breadcrumb-links">
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> <i class=" fas fa-home"> </i> </a>
+              </li>
+
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> Monitores </a>
+              </li>
+
+              <li aria-current="page" class=" breadcrumb-item active">
+                Ajustes
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class=" container-fluid mt--6">
+  <div class=" row">
+    <div class=" col">
+      <div class=" card">
+        <div class=" card-header border-0">
+          <div class=" row">
+            <div class="col-md-4 form-group">
+              <input type="text"
+               placeholder="Rango de fechas"
+               class="form-control"
+               bsDaterangepicker
+               (bsValueChange)="changeDateRange($event)"
+               [(ngModel)]="dateRange"
+               [bsConfig]="{ isAnimated: true }">
+            </div>
+            <div class="col-md-6">
+              <input class="form-control" placeholder="Buscar..." [(ngModel)]="searchTable">
+            </div>
+            <div class=" col-md-2 text-right">
+              <button class="btn btn-primary btn-sm" (click)="generateReport()"> Generar reporte </button>
+            </div>
+          </div>
+          <div class="row">
+            <div *ngIf="showMultiActionsFlag" class="col-md-4 offset-md-8">
+              <ngx-select-dropdown 
+                [(ngModel)]="multiActionsFlag" 
+                [ngModelOptions]="{standalone: true}"
+                [multiple]="false" 
+                [config]="actionConfig" 
+                [options]="actions"
+                (change)="selectionChanged($event,'action',changeStatusModal,changeAccountingAccountModal)"
+                ngDefaultControl 
+                class="w-100 h-100"
+                ></ngx-select-dropdown>
+            </div>
+          </div>
+        </div>
+
+        <div class=" table-responsive">
+          <table class=" table align-items-center table-flush">
+            <thead class=" thead-light">
+              <tr>
+                <ng-container *ngFor="let element of headerElements"> 
+                  <th class=" sort" data-sort="project" scope="col" *ngIf="(!element.show_flag || (element.show_flag && showMoreColumnsFlag))">
+                    {{element.name}}                    
+                  </th>
+                </ng-container>
+                <th>
+                  Ver más
+                </th>
+              </tr>
+              <tr class="header-search-tr">
+                <ng-container *ngFor="let item of headerElements"> 
+                <th class="" scope="col" *ngIf="(!item.show_flag || (item.show_flag && showMoreColumnsFlag))">
+                  <div *ngIf="item.name=='SELECCIÓN'" class=" custom-control custom-checkbox" style="text-align: center;">
+                    <input
+                      class=" custom-control-input"
+                      id="table-check-all"
+                      type="checkbox"
+                      (change)="checkboxChanged($event,'all')"
+                    />
+    
+                    <label class=" custom-control-label" for="table-check-all">
+                    </label>
+                  </div>
+                  <input 
+                  *ngIf="item.name!='SELECCIÓN' && item.name!='ACCIONES'"
+                  (input)="onSearchChange($event,item.name)"
+                  type="text" 
+                  placeholder="{{item.name}}" 
+                  class="form-control header-search">
+                  <div *ngIf="item.name=='ACCIONES'" class="text-center">
+                    <i class="fa fa-bars"></i>
+                  </div>
+                </th>
+                </ng-container>
+                <th>
+                  <button class="btn btn-primary" (click)="showMoreColumnsFlag=!showMoreColumnsFlag">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class=" list">
+              <tr *ngFor="let setting of ( settings | filterByColumn : elementFilter | genericFilter: searchTable) ;index as i "
+               >
+              <td>
+                  <div class=" custom-control custom-checkbox" style="text-align: center;">
+                    <input
+                      class=" custom-control-input"
+                      id="table-check-{{i}}"
+                      type="checkbox"
+                      [checked]="setting.checked"
+                      (change)="checkboxChanged($event,setting)"
+                    />
+    
+                    <label class=" custom-control-label" for="table-check-{{i}}">
+                    </label>
+                  </div>
+                </td>
+                <td class="budget">{{setting.ID}}</td>
+                <td class="budget">{{setting.ESTADO_INTEGRACION}}</td>
+                <td class="budget">{{setting.FECHA_TRANSACCION}}</td>
+                <td class="budget">{{setting.CODIGO_CLIENTE}}</td>
+                <td class="budget">{{setting.CANTIDAD}}</td>
+                <td class="budget">{{setting.LOTE}}</td>
+                <td class="budget">{{setting.CONTRATO_ACTUAL}}</td>
+                <td class="budget">{{setting.ESTADO}}</td>
+                <td class="budget">{{setting.ALMACEN_ACTUAL}}</td>
+                <td class="budget">{{setting.TIPO_MOVIMIENTO}}</td>
+                <td class="budget">{{setting.CODIGO_MOTIVO}}</td>
+                <td class="budget">{{setting.MOTIVO}}</td>
+                <td class="budget" *ngIf="showMoreColumnsFlag">{{setting.SKU_GF}}</td>
+                <td class="budget" *ngIf="showMoreColumnsFlag">{{setting.EXPIRACION_LOTE}}</td>
+                <td class="budget" *ngIf="showMoreColumnsFlag">{{setting.FOLIO_GOLDEN_FROST}}</td>
+                <td class="budget" *ngIf="showMoreColumnsFlag">{{setting.DOCNUM}}</td>
+                <td class="budget" *ngIf="showMoreColumnsFlag">{{setting.OBS_REGLA}}</td>
+                <td class="budget" *ngIf="showMoreColumnsFlag">{{setting.OBS_ADMINISTRADOR}}</td>
+                <td class="budget" *ngIf="showMoreColumnsFlag">{{setting.CUENTA_CONTABLE}}</td>
+                <td class="budget" *ngIf="showMoreColumnsFlag">{{setting.RETENER_AJUSTE}}</td>
+                <td class="budget" *ngIf="showMoreColumnsFlag">{{setting.COSTO_PROMEDIO}}</td>
+                <td class=" text-right">
+                  <div class="dropdown no-caret" dropdown>
+                    <a
+                      aria-controls="dropdown-basic"
+                      class=" btn btn-sm btn-icon-only text-light dropdown-toggle"
+                      dropdownToggle
+                      href="javascript:void(0)"
+                      role="button"
+                    >
+                      <i class=" fas fa-ellipsis-v"> </i>
+                    </a>
+
+                    <div
+                      class="dropdown-menu dropdown-menu-right dropdown-menu-arrow"
+                      *dropdownMenu
+                    >
+                      <a *ngIf="setting.ESTADO_INTEGRACION=='NO_PROCEDE_REGLA' || 
+                        setting.ESTADO_INTEGRACION=='PROCEDE_MONITOR' || 
+                        setting.ESTADO_INTEGRACION=='REPROCESO'" 
+                        href="javascript:void(0)" 
+                        class="dropdown-item"
+                        (click)="changeStatus(changeStatusModal,setting.ID,'PROCEDE_USU')">
+                        Liberar 
+                      </a>
+                      <a *ngIf="setting.ESTADO_INTEGRACION=='NO_PROCEDE_REGLA' || 
+                        setting.ESTADO_INTEGRACION=='PROCEDE_MONITOR' || 
+                        setting.ESTADO_INTEGRACION=='REPROCESO'" 
+                        href="javascript:void(0)" 
+                        class="dropdown-item"
+                        (click)="changeStatus(changeStatusModal,setting.ID,'RECHAZADO')">
+                        Rechazar
+                      </a>
+                      <a *ngIf="setting.ESTADO_INTEGRACION=='NO_PROCEDE_REGLA' || 
+                        setting.ESTADO_INTEGRACION=='PROCEDE_MONITOR' || 
+                        setting.ESTADO_INTEGRACION=='REPROCESO'" 
+                        href="javascript:void(0)" 
+                        class="dropdown-item"
+                        (click)="changeStatus(changeStatusModal,setting.ID,'CERRADO')">
+                        Cerrar
+                      </a>
+
+                      <a *ngIf="setting.ESTADO_INTEGRACION=='NO_PROCEDE_REGLA' || 
+                        setting.ESTADO_INTEGRACION=='PROCEDE_MONITOR' || 
+                        setting.ESTADO_INTEGRACION=='REPROCESO'" 
+                        href="javascript:void(0)" 
+                        class="dropdown-item"
+                        (click)="changeAccountingAccount(changeAccountingAccountModal,setting.ID)">
+                        Actualizar cuenta contable
+                      </a>
+                    </div>
+                  </div>
+                </td>
+                <td class=" budget"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class=" card-footer py-4">
+          <nav aria-label="...">
+            <pagination
+              [totalItems]="totalItems"
+              [maxSize]="5"
+              [rotate]="true"
+              (pageChanged)="pageChanged($event)"
+              class="justify-content-end mb-0"
+              previousText="<i class='fas fa-angle-left'></i>"
+              nextText="<i class='fas fa-angle-right'></i>"
+            >
+            </pagination>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
