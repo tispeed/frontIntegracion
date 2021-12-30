@@ -253,7 +253,9 @@ export class ReceptionManualReturnsComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         if (response.data) {
           this.spinner.hide();
-          this.receptionsByFolio = response.data;
+          for(let element of response.data){
+            this.receptionsByFolio=[...this.receptionsByFolio,element];
+          }
         }
       }, (error) => {
         console.log("error:", error)
@@ -297,11 +299,10 @@ export class ReceptionManualReturnsComponent implements OnInit, OnDestroy {
         }
       }
       if(!event.target.checked){
-        const element_selected = this.allReceptions.find(e => e.checked)
-        if(element_selected){          
+        this.receptionsByFolio = []
+        const elements_selected = this.allReceptions.filter(e => e.checked)
+        for(const element_selected of elements_selected){
           this.selectRow(element_selected)
-        }else{
-          this.receptionsByFolio = []
         }
       }else{
         this.selectRow(element_selected)
